@@ -1,0 +1,34 @@
+apply plugin: 'groovy'
+apply plugin: 'java'
+
+repositories {
+    mavenCentral()
+    jcenter()
+    maven { url "https://jitpack.io" }
+    maven { url "http://repo.jenkins-ci.org/releases/" }
+    maven { url "http://repo.jenkins-ci.org/public/" }
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
+    compile 'org.jenkins-ci.plugins:job-dsl-core:1.76'
+    // This is a set of convenient shotcuts from CFPB
+    // https://github.com/cfpb/jenkins-automation
+    compile 'com.github.cfpb:jenkins-automation:-SNAPSHOT'
+}
+
+task rest(type: JavaExec) {
+    main = 'jenkins.automation.rest.RestApiScriptRunner'
+    classpath = sourceSets.main.runtimeClasspath
+    systemProperties System.getProperties()
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDirs = ['src/main/groovy', 'jobs']
+            compileClasspath += main.compileClasspath
+        }
+    }
+}
+
